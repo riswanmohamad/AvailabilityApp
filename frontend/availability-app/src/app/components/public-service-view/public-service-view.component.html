@@ -1,0 +1,128 @@
+<div class="public-service-container">
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading service information...</p>
+  </div>
+
+  <div *ngIf="!isLoading && !service" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h2>Service Not Found</h2>
+    <p>The service you're looking for is not available or the link has expired.</p>
+    <p>Please check your link or contact the service provider.</p>
+  </div>
+
+  <div *ngIf="!isLoading && service" class="service-container">
+    <!-- Service Header -->
+    <div class="service-header">
+      <h1>{{ service.title }}</h1>
+      <div class="provider-info">
+        <h2>{{ service.providerName }}</h2>
+        <p *ngIf="service.businessName">{{ service.businessName }}</p>
+      </div>
+    </div>
+
+    <!-- Service Details -->
+    <div class="service-details">
+      <div class="detail-card">
+        <h3>Service Information</h3>
+        <div class="detail-grid">
+          <div class="detail-item" *ngIf="service.description">
+            <span class="label">Description:</span>
+            <span class="value">{{ service.description }}</span>
+          </div>
+          <div class="detail-item" *ngIf="service.duration">
+            <span class="label">Duration:</span>
+            <span class="value">{{ service.duration }} minutes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available Slots -->
+    <div class="availability-section">
+      <h3>Available Time Slots</h3>
+      
+      <div class="date-navigation">
+        <button 
+          class="btn btn-secondary" 
+          (click)="navigateWeek(-1)"
+          [disabled]="isLoadingSlots">
+          ← Previous Week
+        </button>
+        <span class="current-week">
+          {{ formatWeekRange(currentWeekStart) }}
+        </span>
+        <button 
+          class="btn btn-secondary" 
+          (click)="navigateWeek(1)"
+          [disabled]="isLoadingSlots">
+          Next Week →
+        </button>
+      </div>
+
+      <div *ngIf="isLoadingSlots" class="loading-slots">
+        Loading available slots...
+      </div>
+
+      <div *ngIf="!isLoadingSlots && availableSlots.length === 0" class="no-slots">
+        <h4>No Available Slots</h4>
+        <p>There are no available time slots for the selected week.</p>
+        <p>Try selecting a different week or contact the service provider.</p>
+      </div>
+
+      <div *ngIf="!isLoadingSlots && availableSlots.length > 0" class="slots-grid">
+        <div *ngFor="let dayGroup of groupedSlots" class="day-group">
+          <h4 class="day-header">{{ dayGroup.day }}</h4>
+          <div class="slots-list">
+            <button 
+              *ngFor="let slot of dayGroup.slots" 
+              class="slot-button"
+              [class.selected]="selectedSlot?.id === slot.id"
+              (click)="selectSlot(slot)"
+              [disabled]="!slot.isAvailable">
+              {{ formatSlotTime(slot) }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Notice -->
+      <div *ngIf="selectedSlot" class="booking-notice">
+        <div class="notice-content">
+          <h4>Time Slot Selected</h4>
+          <p>
+            <strong>{{ formatSelectedSlot(selectedSlot) }}</strong>
+          </p>
+          <p class="booking-info">
+            This is a preview of available time slots. To complete your booking, 
+            please contact the service provider directly using the information provided above.
+          </p>
+          <div class="notice-actions">
+            <button 
+              class="btn btn-primary" 
+              (click)="clearSelection()">
+              Select Different Time
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-section">
+      <h3>Contact Information</h3>
+      <div class="contact-card">
+        <p>To book this service or for any questions, please contact:</p>
+        <div class="contact-details">
+          <div class="contact-item">
+            <strong>{{ service.providerName }}</strong>
+            <span *ngIf="service.businessName"> - {{ service.businessName }}</span>
+          </div>
+          <div class="contact-note">
+            Please mention the time slot you selected when contacting the provider.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

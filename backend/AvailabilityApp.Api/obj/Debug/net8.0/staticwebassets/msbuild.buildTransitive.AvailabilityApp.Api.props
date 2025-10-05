@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\AvailabilityApp.Api.props" />
+</Project>

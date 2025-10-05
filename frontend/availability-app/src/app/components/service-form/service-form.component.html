@@ -1,0 +1,177 @@
+<div class="service-form-container">
+  <div class="form-header">
+    <h1>{{ isEditing ? 'Edit Service' : 'Create New Service' }}</h1>
+    <button class="btn btn-secondary" (click)="goBack()" type="button">
+      ← Back to Dashboard
+    </button>
+  </div>
+
+  <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()" class="service-form">
+    <div class="form-section">
+      <h2>Basic Information</h2>
+      
+      <div class="form-group">
+        <label for="title">Service Title *</label>
+        <input 
+          type="text" 
+          id="title"
+          formControlName="title" 
+          placeholder="e.g., 60-minute Consultation"
+          class="form-control"
+          [class.error]="isFieldInvalid('title')">
+        <div *ngIf="isFieldInvalid('title')" class="error-message">
+          <span *ngIf="serviceForm.get('title')?.errors?.['required']">Service title is required</span>
+          <span *ngIf="serviceForm.get('title')?.errors?.['maxlength']">Service title cannot exceed 100 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description"
+          formControlName="description" 
+          placeholder="Describe your service in detail..."
+          class="form-control textarea"
+          rows="4"
+          [class.error]="isFieldInvalid('description')"></textarea>
+        <div *ngIf="isFieldInvalid('description')" class="error-message">
+          <span *ngIf="serviceForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500 characters</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Service Details</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="duration">Duration (minutes)</label>
+          <input 
+            type="number" 
+            id="duration"
+            formControlName="duration" 
+            placeholder="60"
+            min="1"
+            max="1440"
+            class="form-control"
+            [class.error]="isFieldInvalid('duration')">
+          <div *ngIf="isFieldInvalid('duration')" class="error-message">
+            <span *ngIf="serviceForm.get('duration')?.errors?.['min']">Duration must be at least 1 minute</span>
+            <span *ngIf="serviceForm.get('duration')?.errors?.['max']">Duration cannot exceed 24 hours (1440 minutes)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section" *ngIf="isEditing">
+      <h2>Images</h2>
+      
+      <!-- Existing Images -->
+      <div *ngIf="images.length > 0" class="images-grid">
+        <div *ngFor="let image of images" class="image-item">
+          <img [src]="image.url" [alt]="image.originalFileName" class="service-image">
+          <div class="image-actions">
+            <span class="image-name">{{ image.originalFileName }}</span>
+            <button 
+              type="button" 
+              class="btn btn-danger btn-sm" 
+              (click)="deleteImage(image.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label for="imageUpload">Add Image</label>
+        <input 
+          type="file" 
+          id="imageUpload"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="form-control">
+        <small class="form-help">
+          Supported formats: JPEG, PNG, GIF, WebP. Maximum size: 5MB
+        </small>
+      </div>
+
+      <div *ngIf="selectedFile" class="file-preview">
+        <p>Selected: {{ selectedFile.name }}</p>
+        <button 
+          type="button" 
+          class="btn btn-primary btn-sm" 
+          (click)="uploadImage()"
+          [disabled]="isUploading">
+          {{ isUploading ? 'Uploading...' : 'Upload Image' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-sm" 
+          (click)="selectedFile = null">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div class="form-section" *ngIf="!isEditing && selectedFile">
+      <h2>Image Preview</h2>
+      <div class="file-preview">
+        <p>Selected: {{ selectedFile.name }}</p>
+        <small class="form-help">
+          Image will be uploaded after creating the service
+        </small>
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-sm" 
+          (click)="selectedFile = null">
+          Remove
+        </button>
+      </div>
+    </div>
+
+    <!-- Image Upload for new services -->
+    <div class="form-section" *ngIf="!isEditing">
+      <h2>Add Image (Optional)</h2>
+      
+      <div class="form-group">
+        <label for="imageUpload">Select Image</label>
+        <input 
+          type="file" 
+          id="imageUpload"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="form-control">
+        <small class="form-help">
+          Supported formats: JPEG, PNG, GIF, WebP. Maximum size: 5MB. Image will be uploaded after creating the service.
+        </small>
+      </div>
+
+      <div *ngIf="selectedFile" class="file-preview">
+        <p>Selected: {{ selectedFile.name }}</p>
+        <button 
+          type="button" 
+          class="btn btn-secondary btn-sm" 
+          (click)="selectedFile = null">
+          Remove
+        </button>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="goBack()"
+        [disabled]="isSubmitting">
+        Cancel
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="serviceForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Saving...' : (isEditing ? 'Update Service' : 'Create Service') }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ObSz6Xk2TvxPZXFmYW4ZUZkCRb24WmjaG3WmPla3k1Y=",
+  "Source": "AvailabilityApp.Api",
+  "BasePath": "_content/AvailabilityApp.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
