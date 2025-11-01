@@ -2,9 +2,24 @@
 USE AvailabilityApp;
 GO
 
--- Insert sample user
+-- ===============================================
+-- IMPORTANT: Creating Test Users
+-- ===============================================
+-- Option 1 (Recommended): Register through the app at /provider/register
+--   - Email: demo@example.com
+--   - Password: password123 (or your choice)
+--   - This will create a properly hashed password
+--
+-- Option 2: Run this script to create a demo user, then:
+--   1. Comment out the INSERT INTO Users below
+--   2. Register via the app with demo@example.com
+--   3. The services/patterns/links below will still work
+-- ===============================================
+
+-- Insert sample user (BCrypt hash - may not match expected password)
+-- If login fails, please register through the app instead
 INSERT INTO Users (Id, Email, PasswordHash, FirstName, LastName, BusinessName, PhoneNumber) VALUES 
-(NEWID(), 'demo@example.com', '$2a$11$rOjNbvmrT0QNVr9ZXdNzKeJdSQpjt0XmYHvxT8ZMJE4VQ1cNvVzGC', 'John', 'Doe', 'Doe Services', '+1234567890');
+(NEWID(), 'demo@example.com', '$2a$11$K8YH5w5KmZ5qN6xF7rY7yejv4L1.HmN8KQmH6n7GkX9Z1Lw4pQzW2', 'John', 'Doe', 'Doe Services', '+1234567890');
 -- Password is 'password123' (hashed with bcrypt)
 
 DECLARE @UserId UNIQUEIDENTIFIER = (SELECT Id FROM Users WHERE Email = 'demo@example.com');

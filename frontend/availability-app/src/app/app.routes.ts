@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/auth/login.component';
+import { RegisterComponent } from './components/auth/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ServiceFormComponent } from './components/service-form/service-form.component';
 import { AvailabilityManagerComponent } from './components/availability-manager/availability-manager.component';
@@ -9,6 +10,8 @@ import { AuthGuard } from './guards/auth.guard';
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'provider/register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'services/create', component: ServiceFormComponent, canActivate: [AuthGuard] },
   { path: 'services/:id/edit', component: ServiceFormComponent, canActivate: [AuthGuard] },
