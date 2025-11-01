@@ -8,12 +8,13 @@ import {
   AuthResponse, 
   ApiResponse 
 } from '../models/models';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7000/api'; // Update with your API URL
+  private apiUrl = environment.apiUrl; // Update with your API URL
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private tokenSubject = new BehaviorSubject<string | null>(null);
 

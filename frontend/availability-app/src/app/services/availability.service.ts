@@ -10,12 +10,13 @@ import {
   PublicService,
   ApiResponse 
 } from '../models/models';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AvailabilityService {
-  private apiUrl = 'https://localhost:7000/api'; 
+  private apiUrl = environment.apiUrl; 
 
   constructor(private http: HttpClient) {}
 

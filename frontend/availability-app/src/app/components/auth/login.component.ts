@@ -218,7 +218,20 @@ export class LoginComponent {
         },
         error: (error) => {
           this.loading = false;
-          this.errorMessage = 'An error occurred during login';
+          // Extract error message from the API response
+          if (error.error?.message) {
+            this.errorMessage = error.error.message;
+          } else if (error.error?.errors && Array.isArray(error.error.errors)) {
+            this.errorMessage = error.error.errors.join(', ');
+          } else if (error.status === 401) {
+            this.errorMessage = 'Invalid email or password';
+          } else if (error.status === 400) {
+            this.errorMessage = 'Invalid request. Please check your input';
+          } else if (error.status === 0) {
+            this.errorMessage = 'Unable to connect to server. Please check your connection';
+          } else {
+            this.errorMessage = error.message || 'An error occurred during login';
+          }
           console.error('Login error:', error);
         }
       });

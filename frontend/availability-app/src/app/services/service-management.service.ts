@@ -9,12 +9,13 @@ import {
   SharableLink, 
   ApiResponse 
 } from '../models/models';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceManagementService {
-  private apiUrl = 'https://localhost:7000/api/services'; // Update with your API URL
+  private apiUrl = `${environment.apiUrl}/services`; // Update with your API URL
 
   constructor(private http: HttpClient) {}
 
