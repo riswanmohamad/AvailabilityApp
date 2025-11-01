@@ -29,10 +29,11 @@ namespace AvailabilityApp.Api.Controllers
             }
 
             var result = await _authService.RegisterAsync(registerDto);
-            
+
+            // Always return the ApiResponse object as JSON. For register we keep existing status behavior
             if (result.Success)
                 return Ok(result);
-            
+
             return BadRequest(result);
         }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
 import { 
   User, 
   LoginRequest, 
@@ -38,10 +38,19 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<ApiResponse<AuthResponse>> {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/login`, credentials)
       .pipe(
+        // On successful structured response, persist auth
         tap(response => {
-          if (response.success && response.data) {
+          if (response && response.success && response.data) {
             this.setAuth(response.data.token, response.data.user);
           }
+        }),
+        // Normalize HTTP errors (400/401/etc) into ApiResponse so callers receive a consistent object
+        catchError((err) => {
+          const apiResp = (err && err.error && typeof err.error === 'object')
+            ? err.error as ApiResponse<AuthResponse>
+            : { success: false, message: err?.message || 'Server error', data: undefined } as ApiResponse<AuthResponse>;
+          // Do not call setAuth here since it's an error
+          return of(apiResp);
         })
       );
   }
@@ -50,9 +59,15 @@ export class AuthService {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/auth/register`, userData)
       .pipe(
         tap(response => {
-          if (response.success && response.data) {
+          if (response && response.success && response.data) {
             this.setAuth(response.data.token, response.data.user);
           }
+        }),
+        catchError((err) => {
+          const apiResp = (err && err.error && typeof err.error === 'object')
+            ? err.error as ApiResponse<AuthResponse>
+            : { success: false, message: err?.message || 'Server error', data: undefined } as ApiResponse<AuthResponse>;
+          return of(apiResp);
         })
       );
   }

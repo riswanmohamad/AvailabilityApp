@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -194,7 +195,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -206,35 +208,45 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMessage = '';
+      console.log('Login submit', { email: this.loginForm.value.email });
+      console.log('loading set to', this.loading);
 
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (response) => {
+      this.authService.login(this.loginForm.value)
+        .pipe(finalize(() => {
+          console.log('finalize called - resetting loading');
           this.loading = false;
-          if (response.success) {
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.errorMessage = response.message || 'Login failed';
+          console.log('loading set to', this.loading);
+          this.cdr.detectChanges(); // Force change detection
+        }))
+        .subscribe({
+          next: (response) => {
+            console.log('subscribe.next response:', response);
+            if (response && response.success) {
+              // Successful login
+              console.log('login successful, navigating');
+              this.router.navigate(['/dashboard']);
+              return;
+            }
+
+            // API returned a structured ApiResponse with success=false
+            if (response) {
+              console.log('API returned success=false, message:', response.message, 'errors:', response.errors);
+              this.errorMessage = response.message || (response.errors ? response.errors.join(', ') : 'Login failed');
+            } else {
+              console.log('API returned empty response');
+              this.errorMessage = 'Login failed. Please try again.';
+            }
+            console.log('errorMessage set to', this.errorMessage);
+            this.cdr.detectChanges(); // Force change detection
+          },
+          error: (err) => {
+            // This should rarely happen now since AuthService normalizes errors
+            console.error('subscribe.error err:', err);
+            this.errorMessage = 'An unexpected error occurred';
+            console.log('errorMessage set to', this.errorMessage);
+            this.cdr.detectChanges(); // Force change detection
           }
-        },
-        error: (error) => {
-          this.loading = false;
-          // Extract error message from the API response
-          if (error.error?.message) {
-            this.errorMessage = error.error.message;
-          } else if (error.error?.errors && Array.isArray(error.error.errors)) {
-            this.errorMessage = error.error.errors.join(', ');
-          } else if (error.status === 401) {
-            this.errorMessage = 'Invalid email or password';
-          } else if (error.status === 400) {
-            this.errorMessage = 'Invalid request. Please check your input';
-          } else if (error.status === 0) {
-            this.errorMessage = 'Unable to connect to server. Please check your connection';
-          } else {
-            this.errorMessage = error.message || 'An error occurred during login';
-          }
-          console.error('Login error:', error);
-        }
-      });
+        });
     }
   }
 }
