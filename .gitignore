@@ -1,0 +1,15 @@
+# Ignore build output folders
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Common Visual Studio / IDE artifacts (optional)
+.vs/
+*.user
+*.suo
+
+# Node / npm (if frontend exists)
+node_modules/
+backend/AvailabilityApp.Api/obj/Debug/net8.0/AvailabilityApp.Api.AssemblyInfo.cs
+backend/AvailabilityApp.Api/obj/Debug/net8.0/AvailabilityApp.Api.AssemblyInfoInputs.cache
