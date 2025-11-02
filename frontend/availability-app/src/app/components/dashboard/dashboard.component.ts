@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ServiceManagementService } from '../../services/service-management.service';
@@ -13,6 +13,7 @@ import { Service, SharableLink } from '../../models/models';
 })
 export class DashboardComponent implements OnInit {
   private serviceManagementService = inject(ServiceManagementService);
+  private cdr = inject(ChangeDetectorRef);
 
   services: Service[] = [];
   isLoading = true;
@@ -43,12 +44,13 @@ export class DashboardComponent implements OnInit {
     try {
       this.isLoading = true;
       this.services = await this.serviceManagementService.getServices();
+      this.cdr.detectChanges();
     } catch (error) {
       console.error('Error loading services:', error);
-      // In a real app, you'd show a proper error message
       alert('Failed to load services');
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 

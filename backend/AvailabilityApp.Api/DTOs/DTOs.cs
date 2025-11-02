@@ -56,6 +56,7 @@ namespace AvailabilityApp.Api.DTOs
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public int? Duration { get; set; }
+        public string DurationUnit { get; set; } = "minutes";
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string? SharableToken { get; set; }
@@ -68,6 +69,10 @@ namespace AvailabilityApp.Api.DTOs
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public int? Duration { get; set; }
+        
+        [Required]
+        [RegularExpression("^(minutes|hours|days|months)$", ErrorMessage = "DurationUnit must be one of: minutes, hours, days, months")]
+        public string DurationUnit { get; set; } = "minutes";
     }
 
     public class UpdateServiceDto
@@ -76,6 +81,10 @@ namespace AvailabilityApp.Api.DTOs
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
         public int? Duration { get; set; }
+        
+        [Required]
+        [RegularExpression("^(minutes|hours|days|months)$", ErrorMessage = "DurationUnit must be one of: minutes, hours, days, months")]
+        public string DurationUnit { get; set; } = "minutes";
     }
 
     // Availability DTOs

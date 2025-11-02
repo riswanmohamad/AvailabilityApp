@@ -33,6 +33,7 @@ export interface Service {
   title: string;
   description?: string;
   duration?: number;
+  durationUnit: string; // 'minutes' | 'hours' | 'days' | 'months'
   createdAt: string;
   updatedAt: string;
   sharableToken?: string;
@@ -43,12 +44,14 @@ export interface CreateServiceRequest {
   title: string;
   description?: string;
   duration?: number;
+  durationUnit: string; // 'minutes' | 'hours' | 'days' | 'months'
 }
 
 export interface UpdateServiceRequest {
   title: string;
   description?: string;
   duration?: number;
+  durationUnit: string; // 'minutes' | 'hours' | 'days' | 'months'
 }
 
 // Image Models

@@ -27,11 +27,19 @@ export class ServiceFormComponent implements OnInit {
   images: ServiceImage[] = [];
   isUploading = false;
 
+  durationUnits = [
+    { value: 'minutes', label: 'Minutes' },
+    { value: 'hours', label: 'Hours' },
+    { value: 'days', label: 'Days' },
+    { value: 'months', label: 'Months' }
+  ];
+
   constructor() {
     this.serviceForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', Validators.maxLength(500)],
-      duration: [60, [Validators.min(1), Validators.max(1440)]]
+      duration: [60, [Validators.min(1), Validators.max(525600)]],
+      durationUnit: ['minutes', Validators.required]
     });
   }
 
@@ -52,10 +60,12 @@ export class ServiceFormComponent implements OnInit {
       if (service) {
         this.currentService = service;
         this.images = service.images || [];
+        
         this.serviceForm.patchValue({
           title: service.title,
           description: service.description,
-          duration: service.duration
+          duration: service.duration,
+          durationUnit: service.durationUnit || 'minutes'
         });
       }
     } catch (error) {
@@ -140,14 +150,16 @@ export class ServiceFormComponent implements OnInit {
         const updateRequest: UpdateServiceRequest = {
           title: formValue.title,
           description: formValue.description,
-          duration: formValue.duration
+          duration: formValue.duration,
+          durationUnit: formValue.durationUnit
         };
         await this.serviceManagementService.updateService(this.serviceId, updateRequest);
       } else {
         const createRequest: CreateServiceRequest = {
           title: formValue.title,
           description: formValue.description,
-          duration: formValue.duration
+          duration: formValue.duration,
+          durationUnit: formValue.durationUnit
         };
         const newService = await this.serviceManagementService.createService(createRequest);
         if (newService && this.selectedFile) {

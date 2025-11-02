@@ -20,8 +20,13 @@ export class ServiceManagementService {
   constructor(private http: HttpClient) {}
 
   async getServices(): Promise<Service[]> {
-    const response = await firstValueFrom(this.http.get<ApiResponse<Service[]>>(this.apiUrl));
-    return response.data || [];
+    try {
+      const response = await firstValueFrom(this.http.get<ApiResponse<Service[]>>(this.apiUrl));
+      return response.data || [];
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      return [];
+    }
   }
 
   async getService(id: string): Promise<Service | null> {

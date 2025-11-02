@@ -44,22 +44,43 @@
       <h2>Service Details</h2>
       
       <div class="form-row">
-        <div class="form-group">
-          <label for="duration">Duration (minutes)</label>
+        <div class="form-group" style="flex: 2;">
+          <label for="duration">Duration *</label>
           <input 
             type="number" 
             id="duration"
             formControlName="duration" 
-            placeholder="60"
+            placeholder="1"
             min="1"
-            max="1440"
             class="form-control"
             [class.error]="isFieldInvalid('duration')">
+          <small class="form-help">
+            Set the typical duration for this service
+          </small>
           <div *ngIf="isFieldInvalid('duration')" class="error-message">
-            <span *ngIf="serviceForm.get('duration')?.errors?.['min']">Duration must be at least 1 minute</span>
-            <span *ngIf="serviceForm.get('duration')?.errors?.['max']">Duration cannot exceed 24 hours (1440 minutes)</span>
+            <span *ngIf="serviceForm.get('duration')?.errors?.['min']">Duration must be at least 1</span>
+            <span *ngIf="serviceForm.get('duration')?.errors?.['required']">Duration is required</span>
           </div>
         </div>
+
+        <div class="form-group" style="flex: 1;">
+          <label for="durationUnit">Unit *</label>
+          <select 
+            id="durationUnit"
+            formControlName="durationUnit"
+            class="form-control"
+            [class.error]="isFieldInvalid('durationUnit')">
+            <option *ngFor="let unit of durationUnits" [value]="unit.value">
+              {{ unit.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-help-section">
+        <small>
+          <strong>Note:</strong> For detailed availability patterns, time slots, and exceptions, use the "Manage Availability" button after creating the service.
+        </small>
       </div>
     </div>
 

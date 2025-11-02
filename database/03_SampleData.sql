@@ -26,8 +26,8 @@ DECLARE @UserId UNIQUEIDENTIFIER = (SELECT Id FROM Users WHERE Email = 'demo@exa
 
 -- Insert sample service
 DECLARE @ServiceId UNIQUEIDENTIFIER = NEWID();
-INSERT INTO Services (Id, UserId, Title, Description, Duration) VALUES 
-(@ServiceId, @UserId, 'Personal Training Session', 'One-on-one fitness training session with certified trainer', 60);
+INSERT INTO Services (Id, UserId, Title, Description, Duration, DurationUnit) VALUES 
+(@ServiceId, @UserId, 'Personal Training Session', 'One-on-one fitness training session with certified trainer', 60, 'minutes');
 
 -- Insert availability pattern (Monday to Friday, 9 AM to 5 PM, hourly slots)
 DECLARE @PatternId UNIQUEIDENTIFIER = NEWID();

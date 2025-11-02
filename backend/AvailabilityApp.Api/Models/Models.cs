@@ -22,7 +22,8 @@ namespace AvailabilityApp.Api.Models
         public Guid UserId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public int? Duration { get; set; } // Duration in minutes
+        public int? Duration { get; set; }
+        public string DurationUnit { get; set; } = "minutes"; // minutes, hours, days, months
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsActive { get; set; }

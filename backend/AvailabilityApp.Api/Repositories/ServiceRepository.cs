@@ -27,7 +27,7 @@ namespace AvailabilityApp.Api.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
-                SELECT Id, UserId, Title, Description, Duration, 
+                SELECT Id, UserId, Title, Description, Duration, DurationUnit,
                        CreatedAt, UpdatedAt, IsActive
                 FROM Services 
                 WHERE UserId = @UserId AND IsActive = 1
@@ -40,7 +40,7 @@ namespace AvailabilityApp.Api.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
-                SELECT Id, UserId, Title, Description, Duration, 
+                SELECT Id, UserId, Title, Description, Duration, DurationUnit,
                        CreatedAt, UpdatedAt, IsActive
                 FROM Services 
                 WHERE Id = @Id AND IsActive = 1";
@@ -52,7 +52,7 @@ namespace AvailabilityApp.Api.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
-                SELECT Id, UserId, Title, Description, Duration, 
+                SELECT Id, UserId, Title, Description, Duration, DurationUnit,
                        CreatedAt, UpdatedAt, IsActive
                 FROM Services 
                 WHERE Id = @Id AND UserId = @UserId AND IsActive = 1";
@@ -64,7 +64,7 @@ namespace AvailabilityApp.Api.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
-                SELECT s.Id, s.UserId, s.Title, s.Description, s.Duration, 
+                SELECT s.Id, s.UserId, s.Title, s.Description, s.Duration, s.DurationUnit,
                        s.CreatedAt, s.UpdatedAt, s.IsActive
                 FROM Services s
                 INNER JOIN SharableLinks sl ON s.Id = sl.ServiceId
@@ -77,8 +77,8 @@ namespace AvailabilityApp.Api.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
-                INSERT INTO Services (Id, UserId, Title, Description, Duration, CreatedAt, UpdatedAt, IsActive)
-                VALUES (@Id, @UserId, @Title, @Description, @Duration, @CreatedAt, @UpdatedAt, @IsActive);
+                INSERT INTO Services (Id, UserId, Title, Description, Duration, DurationUnit, CreatedAt, UpdatedAt, IsActive)
+                VALUES (@Id, @UserId, @Title, @Description, @Duration, @DurationUnit, @CreatedAt, @UpdatedAt, @IsActive);
                 SELECT @Id;";
 
             service.Id = Guid.NewGuid();
@@ -95,7 +95,7 @@ namespace AvailabilityApp.Api.Repositories
             using var connection = _connectionFactory.CreateConnection();
             var sql = @"
                 UPDATE Services 
-                SET Title = @Title, Description = @Description, Duration = @Duration, UpdatedAt = @UpdatedAt
+                SET Title = @Title, Description = @Description, Duration = @Duration, DurationUnit = @DurationUnit, UpdatedAt = @UpdatedAt
                 WHERE Id = @Id AND UserId = @UserId";
 
             service.UpdatedAt = DateTime.UtcNow;

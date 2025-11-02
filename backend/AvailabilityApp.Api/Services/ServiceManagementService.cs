@@ -111,7 +111,8 @@ namespace AvailabilityApp.Api.Services
                     UserId = userId,
                     Title = createServiceDto.Title,
                     Description = createServiceDto.Description,
-                    Duration = createServiceDto.Duration
+                    Duration = createServiceDto.Duration,
+                    DurationUnit = createServiceDto.DurationUnit
                 };
 
                 var serviceId = await _serviceRepository.CreateAsync(service);
@@ -154,6 +155,7 @@ namespace AvailabilityApp.Api.Services
                 existingService.Title = updateServiceDto.Title;
                 existingService.Description = updateServiceDto.Description;
                 existingService.Duration = updateServiceDto.Duration;
+                existingService.DurationUnit = updateServiceDto.DurationUnit;
 
                 var updated = await _serviceRepository.UpdateAsync(existingService);
                 if (!updated)
@@ -339,6 +341,7 @@ namespace AvailabilityApp.Api.Services
                 Title = service.Title,
                 Description = service.Description,
                 Duration = service.Duration,
+                DurationUnit = service.DurationUnit,
                 CreatedAt = service.CreatedAt,
                 UpdatedAt = service.UpdatedAt,
                 SharableToken = sharableLink?.Token,
